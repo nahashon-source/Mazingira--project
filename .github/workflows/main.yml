@@ -8,7 +8,6 @@ on:
 
 jobs:
   test_queue:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -49,6 +48,6 @@ while not task_queue.empty():
     print(f'Processing {task}')
     task_queue.task_done()
         "
-    
+
     - name: Run tests with pytest
       run: python -m pytest
