@@ -1,0 +1,54 @@
+name: Python and Queue Workflow
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test_queue:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.10", "3.11"]
+
+    steps:
+    - name: Check out the code
+      uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install -r requirements.txt
+        python -m pip install pytest
+
+    - name: Run Queue Task
+      run: |
+        python -c "
+import queue
+
+# Initialize a FIFO queue
+task_queue = queue.Queue()
+
+# Enqueue tasks
+for i in range(5):
+    task_queue.put(f'Task {i+1}')
+
+# Process tasks
+while not task_queue.empty():
+    task = task_queue.get()
+    print(f'Processing {task}')
+    task_queue.task_done()
+        "
+    
+    - name: Run tests with pytest
+      run: python -m pytest
