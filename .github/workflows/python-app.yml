@@ -11,10 +11,10 @@ permissions:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}  # Dynamically runs on the OS defined in the matrix
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [ubuntu-latest, windows-latest, macOS-latest]  # Matrix of OS environments
 
     steps:
       - uses: actions/checkout@v4
